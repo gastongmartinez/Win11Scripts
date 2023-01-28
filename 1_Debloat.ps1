@@ -7,7 +7,6 @@ if ( $SN -eq "N" ) {
 
 # Comentar para omitir
 $MSApss = @(
-    "Microsoft.XboxGameCallableUI"
     "Clipchamp.Clipchamp"
     "Microsoft.BingNews"
     "Microsoft.BingWeather"
