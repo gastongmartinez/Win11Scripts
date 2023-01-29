@@ -1,3 +1,6 @@
+#Requires -RunAsAdministrator
+#Requires -Version 5.1
+
 Import-Module -Name $PSScriptRoot\Debloat.psm1 -Force
 
 $SN = Read-Host -Prompt "Al finalizar se reiniciara el equipo, desea continuar? (S/N)"
