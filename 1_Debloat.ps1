@@ -10,8 +10,11 @@ $MSApss = @(
     "Clipchamp.Clipchamp"
     "Microsoft.BingNews"
     "Microsoft.BingWeather"
+    "Microsoft.GetHelp"
+    "Microsoft.Getstarted"
     "Microsoft.People"
     "Microsoft.ScreenSketch"
+    "Microsoft.WindowsAlarms"
     "Microsoft.WindowsMaps"
     "Microsoft.Xbox.TCUI"
     "Microsoft.XboxGamingOverlay"
@@ -27,6 +30,7 @@ $MSApss = @(
     "Microsoft.WindowsFeedbackHub"
     "Microsoft.Todos"
     "MicrosoftCorporationII.QuickAssist"
+    "microsoft.windowscommunicationsapps"
 )
 
 RemoveApps $MSApss
