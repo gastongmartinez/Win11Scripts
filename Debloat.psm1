@@ -22,9 +22,6 @@
 #region MS Apps
 Function RemoveApps ($Apps) {
         
-    $Capabilities = @(
-        "App.Support.QuickAssist~~~~0.0.1.0"
-    )
     $Logfile = "$env:SystemRoot\Temp\LimpiezaApps.log"
     Set-Content -Path $Logfile -Value "Remove builtin apps based on $Applist"
 
@@ -50,11 +47,6 @@ Function RemoveApps ($Apps) {
         else {
             "Unable to find provisioned package: $App" | Out-File -FilePath $Logfile -Append -Encoding ascii
         }
-    }
-
-    ForEach ($Capability in $Capabilities) {
-        "`r`nRemoving capability: $Capability".Replace("  ", " ") | Out-File -FilePath $Logfile -Append 
-        Remove-WindowsCapability -online -name $Capability | Out-File -FilePath $Logfile -Append -Encoding ascii
     }
 
     Get-Content -Path $Logfile
