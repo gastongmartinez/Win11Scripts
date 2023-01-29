@@ -51,7 +51,8 @@ Function RemoveApps ($Apps) {
 
     Get-Content -Path $Logfile
     
-    winget uninstall "Sugerencias de Microsoft"
     winget uninstall "Microsoft OneDrive"
+    winget uninstall "Cortana"
+    winget uninstall "Microsoft 365 (Office)"
 }
 #endregion MS Apps
