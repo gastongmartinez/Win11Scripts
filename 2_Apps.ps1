@@ -63,3 +63,7 @@ ForEach ($App in $AppsWG) {
     winget install $App --silent --accept-package-agreements
 }
 
+$SN = Read-Host -Prompt "Se recomienda reiniciar el equipo, desea hacerlo ahora? (S/N): "
+if ( $SN -eq "S" ) {
+    Restart-Computer
+}
