@@ -1,21 +1,21 @@
 <#
 	.SYNOPSIS
-	"Win10 Script" es un modulo de PowerShell para la limpieza de aplicaciones y servicios de M$.
+	"Win11 Script" es un modulo de PowerShell para la limpieza de aplicaciones y servicios de M$.
 
-	Fecha: 25/03/2021
+	Fecha: 29/01/2023
 
     .NOTES
 	Ejecutar previamente 0_HabilitarScripts.bat o el comando:
 		Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force
 
 	.NOTES
-    Vesiones de Windows 10 soportadas: 2004 (20H1)/20H2 (2009)
+    Vesiones de Windows 11 soportadas: 22H2
 	Ediciones: Home/Pro/Enterprise
 	Arquitectura: x64
 
     .Notes
     Basado en:
-        https://github.com/farag2/Windows-10-Sophia-Script
+        https://github.com/farag2/Sophia-Script-for-Windows
         https://github.com/ChrisTitusTech/win10script
 #>
 
