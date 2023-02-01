@@ -88,6 +88,7 @@ PrtScnSnippingTool -Enable
 AeroShaking -Enable
 FolderGroupBy -None
 
+
 # System
 StorageSense -Disable
 Hibernation -Disable
@@ -105,3 +106,6 @@ NumLock -Enable
 StickyShift -Disable
 SaveRestartableApps -Enable
 DefaultTerminalApp -WindowsTerminal
+UnpinAllStartApps
+RunPowerShellShortcut -Elevated
+
