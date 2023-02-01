@@ -108,8 +108,13 @@ SaveRestartableApps -Enable
 DefaultTerminalApp -WindowsTerminal
 UnpinAllStartApps
 RunPowerShellShortcut -Elevated
+Windows10ContextMenu -Enable
 
 # UWP
 UninstallUWPApps
 CortanaAutostart -Disable
 TeamsAutostart -Disable
+
+# Gaming
+XboxGameBar -Disable
+XboxGameTips -Disable
