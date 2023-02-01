@@ -616,12 +616,12 @@ function ScheduledTasks {
         "Enable" {
 
             $State = "Disabled"
-            $ButtonContent = $Localization.Enable
+            $ButtonContent = "Habilitar"
             $ButtonAdd_Click = { EnableButton }
         }
         "Disable" {
             $State = "Ready"
-            $ButtonContent = $Localization.Disable
+            $ButtonContent = "Desactivar"
             $ButtonAdd_Click = { DisableButton }
         }
     }
@@ -634,13 +634,13 @@ function ScheduledTasks {
 
     if (-not ($Tasks)) {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.NoData -Verbose
+        Write-Verbose -Message "Nada que mostrar" -Verbose
 
         return
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+    Write-Verbose -Message "Abriendo el cuadro de diálogo..." -Verbose
 
     #region Sendkey function
     # Emulate the Backspace key sending to prevent the console window to freeze
@@ -686,7 +686,7 @@ public static extern bool SetForegroundWindow(IntPtr hWnd);
     $Button.Content = $ButtonContent
     $Button.Add_Click({ & $ButtonAdd_Click })
 
-    $Window.Title = $Localization.ScheduledTasks
+    $Window.Title = "Tareas programadas"
 
     # Force move the WPF form to the foreground
     $Window.Add_Loaded({ $Window.Activate() })
@@ -2866,17 +2866,17 @@ function Cursors {
                     New-ItemProperty -Path "HKCU:\Control Panel\Cursors\Schemes" -Name "W11 Cursors Dark HD v2.2 by Jepri Creations" -PropertyType String -Value $Schemes -Force
                 }
                 catch [System.Net.WebException] {
-                    Write-Warning -Message ($Localization.NoResponse -f "https://github.com")
-                    Write-Error -Message ($Localization.NoResponse -f "https://github.com") -ErrorAction SilentlyContinue
+                    Write-Warning -Message ("No se pudo establecer una conexión con {0}" -f "https://github.com")
+                    Write-Error -Message ("No se pudo establecer una conexión con {0}" -f "https://github.com") -ErrorAction SilentlyContinue
 
-                    Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                    Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
                 }
             }
             catch [System.Net.WebException] {
-                Write-Warning -Message $Localization.NoInternetConnection
-                Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+                Write-Warning -Message "No hay conexión a Internet"
+                Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Light" {
@@ -2974,17 +2974,17 @@ function Cursors {
                     New-ItemProperty -Path "HKCU:\Control Panel\Cursors\Schemes" -Name "W11 Cursor Light HD v2.2 by Jepri Creations" -PropertyType String -Value $Schemes -Force
                 }
                 catch [System.Net.WebException] {
-                    Write-Warning -Message ($Localization.NoResponse -f "https://github.com")
-                    Write-Error -Message ($Localization.NoResponse -f "https://github.com") -ErrorAction SilentlyContinue
+                    Write-Warning -Message ("No se pudo establecer una conexión con {0}" -f "https://github.com")
+                    Write-Error -Message ("No se pudo establecer una conexión con {0}" -f "https://github.com") -ErrorAction SilentlyContinue
 
-                    Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                    Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
                 }
             }
             catch [System.Net.WebException] {
-                Write-Warning -Message $Localization.NoInternetConnection
-                Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+                Write-Warning -Message "No hay conexión a Internet"
+                Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Default" {
@@ -4107,12 +4107,12 @@ function WindowsFeatures {
     switch ($PSCmdlet.ParameterSetName) {
         "Enable" {
             $State = @("Disabled", "DisablePending")
-            $ButtonContent = $Localization.Enable
+            $ButtonContent = "Habilitar"
             $ButtonAdd_Click = { EnableButton }
         }
         "Disable" {
             $State = @("Enabled", "EnablePending")
-            $ButtonContent = $Localization.Disable
+            $ButtonContent = "Desactivar"
             $ButtonAdd_Click = { DisableButton }
         }
     }
@@ -4129,13 +4129,13 @@ function WindowsFeatures {
 
     if (-not ($Features)) {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.NoData -Verbose
+        Write-Verbose -Message "Nada que mostrar" -Verbose
 
         return
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+    Write-Verbose -Message "Abriendo el cuadro de diálogo..." -Verbose
 
     #region Sendkey function
     # Emulate the Backspace key sending to prevent the console window to freeze
@@ -4181,7 +4181,7 @@ public static extern bool SetForegroundWindow(IntPtr hWnd);
     $Button.Content = $ButtonContent
     $Button.Add_Click({ & $ButtonAdd_Click })
 
-    $Window.Title = $Localization.WindowsFeaturesTitle
+    $Window.Title = "Características de Windows"
 
     # Force move the WPF form to the foreground
     $Window.Add_Loaded({ $Window.Activate() })
@@ -4391,7 +4391,7 @@ function WindowsCapabilities {
 
         if ([string]$SelectedCapabilities.Name -match "Browser.InternetExplorer") {
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.RestartWarning
+            Write-Warning -Message "Asegúrese de reiniciar su PC"
         }
     }
 
@@ -4406,7 +4406,7 @@ function WindowsCapabilities {
 
         if ([string]$SelectedCapabilities.Name -match "Browser.InternetExplorer") {
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.RestartWarning
+            Write-Warning -Message "Asegúrese de reiniciar su PC"
         }
     }
 
@@ -4464,19 +4464,19 @@ function WindowsCapabilities {
                 }
 
                 $State = "NotPresent"
-                $ButtonContent = $Localization.Install
+                $ButtonContent = "Instalar"
                 $ButtonAdd_Click = { InstallButton }
             }
             catch [System.Net.WebException] {
-                Write-Warning -Message $Localization.NoInternetConnection
-                Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+                Write-Warning -Message "No hay conexión a Internet"
+                Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Uninstall" {
             $State = "Installed"
-            $ButtonContent = $Localization.Uninstall
+            $ButtonContent = "Desinstalar"
             $ButtonAdd_Click = { UninstallButton }
         }
     }
@@ -4493,13 +4493,13 @@ function WindowsCapabilities {
 
     if (-not ($Capabilities)) {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.NoData -Verbose
+        Write-Verbose -Message "Nada que mostrar" -Verbose
 
         return
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+    Write-Verbose -Message "Abriendo el cuadro de diálogo..." -Verbose
 
     #region Sendkey function
     # Emulate the Backspace key sending to prevent the console window to freeze
@@ -4545,7 +4545,7 @@ public static extern bool SetForegroundWindow(IntPtr hWnd);
     $Button.Content = $ButtonContent
     $Button.Add_Click({ & $ButtonAdd_Click })
 
-    $Window.Title = $Localization.OptionalFeaturesTitle
+    $Window.Title = "Características opcionales"
 
     # Force move the WPF form to the foreground
     $Window.Add_Loaded({ $Window.Activate() })
@@ -4966,7 +4966,7 @@ public extern static int SHSetKnownFolderPath(ref Guid folderId, uint flags, Int
         $CurrentUserFolderPath = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name $UserShellFoldersRegistryNames[$UserFolder]
         if ($CurrentUserFolder -ne $FolderPath) {
             if ((Get-ChildItem -Path $CurrentUserFolderPath | Measure-Object).Count -ne 0) {
-                Write-Error -Message ($Localization.UserShellFolderNotEmpty -f $CurrentUserFolderPath) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Algunos archivos quedan en la carpeta {0}. Moverlos manualmente a una nueva" -f $CurrentUserFolderPath) -ErrorAction SilentlyContinue
             }
 
             # Creating a new folder if there is no one
@@ -5090,7 +5090,7 @@ public static string GetString(uint strId)
     switch ($PSCmdlet.ParameterSetName) {
         "Root" {
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Verbose -Message $Localization.RetrievingDrivesList -Verbose
+            Write-Verbose -Message "Recuperando lista de unidades..." -Verbose
             Write-Information -MessageData "" -InformationAction Continue
 
             # Store all drives letters to use them within ShowMenu function
@@ -5105,181 +5105,181 @@ public static string GetString(uint strId)
             }
 
             # Desktop
-            Write-Verbose -Message ($Localization.DriveSelect -f $DesktopLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DesktopLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Desktop
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $DesktopLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $DesktopLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $DesktopLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DesktopLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Desktop -FolderPath "${SelectedDrive}:\Desktop" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Documents
-            Write-Verbose -Message ($Localization.DriveSelect -f $DocumentsLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DocumentsLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Personal
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $DocumentsLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $DocumentsLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $DocumentsLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DocumentsLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Documents -FolderPath "${SelectedDrive}:\Documents" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Downloads
-            Write-Verbose -Message ($Localization.DriveSelect -f $DownloadsLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DownloadsLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $DownloadsLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $DownloadsLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $DownloadsLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $DownloadsLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Downloads -FolderPath "${SelectedDrive}:\Downloads" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Music
-            Write-Verbose -Message ($Localization.DriveSelect -f $MusicLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $MusicLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Music"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $MusicLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $MusicLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $MusicLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $MusicLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Music -FolderPath "${SelectedDrive}:\Music" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Pictures
-            Write-Verbose -Message ($Localization.DriveSelect -f $PicturesLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $PicturesLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Pictures"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $PicturesLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $PicturesLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $PicturesLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $PicturesLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Pictures -FolderPath "${SelectedDrive}:\Pictures" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Videos
-            Write-Verbose -Message ($Localization.DriveSelect -f $VideosLocalizedString) -Verbose
+            Write-Verbose -Message ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $VideosLocalizedString) -Verbose
 
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Video"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderRequest -f $VideosLocalizedString
-            $No = $Localization.No
-            $Yes = $Localization.Yes
+            $Message = "¿Le gustaría cambiar la ubicación de la {0} carpeta?" -f $VideosLocalizedString
+            $No = "No"
+            $Yes = "Sí"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
 
             switch ($Result) {
                 "0" {
-                    $SelectedDrive = ShowMenu -Title ($Localization.DriveSelect -f $VideosLocalizedString) -Menu $DriveLetters -Default $Script:Default
+                    $SelectedDrive = ShowMenu -Title ("Seleccione la unidad dentro de la raíz de la cual se creó la carpeta {0}" -f $VideosLocalizedString) -Menu $DriveLetters -Default $Script:Default
                     UserShellFolder -UserFolder Videos -FolderPath "${SelectedDrive}:\Videos" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
@@ -5287,17 +5287,17 @@ public static string GetString(uint strId)
         "Custom" {
             # Desktop
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Desktop
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $DesktopLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $DesktopLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5306,7 +5306,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5315,28 +5315,28 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Desktop -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Documents
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Personal
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $DocumentsLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $DocumentsLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5345,7 +5345,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5354,28 +5354,28 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Documents -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Downloads
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $DownloadsLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $DownloadsLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5384,7 +5384,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5393,28 +5393,28 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Downloads -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Music
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Music"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $MusicLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $MusicLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5423,7 +5423,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5432,28 +5432,28 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Music -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Pictures
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Pictures"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $PicturesLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $PicturesLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5462,7 +5462,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5471,28 +5471,28 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Pictures -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Videos
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Video"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserFolderSelect -f $VideosLocalizedString
-            $Browse = $Localization.Browse
-            $No = $Localization.No
+            $Message = "Seleccione una carpeta para la carpeta {0}" -f $VideosLocalizedString
+            $Browse = "Examinar"
+            $No = "No"
             $Options = "&$Browse", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5501,7 +5501,7 @@ public static string GetString(uint strId)
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $FolderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                    $FolderBrowserDialog.Description = $Localization.FolderSelect
+                    $FolderBrowserDialog.Description = "Seleccione una carpeta"
                     $FolderBrowserDialog.RootFolder = "MyComputer"
 
                     # Force move the open file dialog to the foreground
@@ -5510,11 +5510,11 @@ public static string GetString(uint strId)
 
                     if ($FolderBrowserDialog.SelectedPath) {
                         UserShellFolder -UserFolder Videos -FolderPath $FolderBrowserDialog.SelectedPath -RemoveDesktopINI
-                        Write-Verbose -Message ($Localization.NewUserFolderLocation -f $FolderBrowserDialog.SelectedPath) -Verbose
+                        Write-Verbose -Message ("Nueva ubicacion de la carpeta de usuario {0}" -f $FolderBrowserDialog.SelectedPath) -Verbose
                     }
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
@@ -5522,17 +5522,17 @@ public static string GetString(uint strId)
         "Default" {
             # Desktop
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Desktop
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DesktopLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $DesktopLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $DesktopLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5542,24 +5542,24 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Desktop -FolderPath "$env:USERPROFILE\Desktop" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Documents
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Personal
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DocumentsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $DocumentsLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $DocumentsLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5569,24 +5569,24 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Documents -FolderPath "$env:USERPROFILE\Documents" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Downloads
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $DownloadsLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $DownloadsLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $DownloadsLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5596,24 +5596,24 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Downloads -FolderPath "$env:USERPROFILE\Downloads" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Music
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Music"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $MusicLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $MusicLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $MusicLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5623,24 +5623,24 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Music -FolderPath "$env:USERPROFILE\Music" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Pictures
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Pictures"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $PicturesLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $PicturesLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $PicturesLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5650,24 +5650,24 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Pictures -FolderPath "$env:USERPROFILE\Pictures" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
 
             # Videos
             $CurrentUserFolderLocation = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "My Video"
-            Write-Verbose -Message ($Localization.CurrentUserFolderLocation -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
+            Write-Verbose -Message ("La ubicación actual de la carpeta {0}: {1}" -f $VideosLocalizedString, $CurrentUserFolderLocation) -Verbose
 
             Write-Information -MessageData "" -InformationAction Continue
-            Write-Warning -Message $Localization.FilesWontBeMoved
+            Write-Warning -Message "Los archivos no se transferirán"
 
             Write-Information -MessageData "" -InformationAction Continue
 
             $Title = ""
-            $Message = $Localization.UserDefaultFolder -f $VideosLocalizedString
-            $Yes = $Localization.Yes
-            $No = $Localization.No
+            $Message = "¿Le gustaría cambiar la ubicación de la carpeta {0} para el valor por defecto?" -f $VideosLocalizedString
+            $Yes = "Sí"
+            $No = "No"
             $Options = "&$Yes", "&$No"
             $DefaultChoice = 1
             $Result = $Host.UI.PromptForChoice($Title, $Message, $Options, $DefaultChoice)
@@ -5677,7 +5677,7 @@ public static string GetString(uint strId)
                     UserShellFolder -UserFolder Videos -FolderPath "$env:USERPROFILE\Videos" -RemoveDesktopINI
                 }
                 "1" {
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                     Write-Information -MessageData "" -InformationAction Continue
                 }
             }
@@ -5792,8 +5792,8 @@ function WinPrtScrFolder {
                     New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{B7BEDE81-DF94-4682-A7D8-57A52620B86F}" -PropertyType ExpandString -Value $DesktopFolder -Force
                 }
                 else {
-                    Write-Warning -Message ($Localization.OneDriveWarning -f $MyInvocation.Line)
-                    Write-Error -Message ($Localization.OneDriveWarning -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                    Write-Warning -Message ("La función {0} se aplicará sólo si el preajuste está configurado para eliminar OneDrive (o la aplicación ya fue eliminada)" -f $MyInvocation.Line)
+                    Write-Error -Message ("La función {0} se aplicará sólo si el preajuste está configurado para eliminar OneDrive (o la aplicación ya fue eliminada)" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
                 }
             }
             else {
@@ -5803,8 +5803,8 @@ function WinPrtScrFolder {
                     New-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{B7BEDE81-DF94-4682-A7D8-57A52620B86F}" -PropertyType ExpandString -Value $DesktopFolder -Force
                 }
                 else {
-                    Write-Warning -Message ($Localization.OneDriveWarning -f $MyInvocation.Line)
-                    Write-Error -Message ($Localization.OneDriveWarning -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                    Write-Warning -Message ("La función {0} se aplicará sólo si el preajuste está configurado para eliminar OneDrive (o la aplicación ya fue eliminada)" -f $MyInvocation.Line)
+                    Write-Error -Message ("La función {0} se aplicará sólo si el preajuste está configurado para eliminar OneDrive (o la aplicación ya fue eliminada)" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
                 }
             }
         }
@@ -5976,7 +5976,7 @@ function ReservedStorage {
                 Set-WindowsReservedStorageState -State Disabled
             }
             catch [System.Runtime.InteropServices.COMException] {
-                Write-Error -Message ($Localization.ReservedStorageIsInUse -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Esta operación no es compatible cuando el almacenamiento reservada está en uso\nPor favor, vuelva a ejecutar la función {0} después de reiniciar el PC" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Enable" {
@@ -7298,10 +7298,10 @@ function InstallVCRedist {
         }
     }
     catch [System.Net.WebException] {
-        Write-Warning -Message $Localization.NoInternetConnection
-        Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+        Write-Warning -Message "No hay conexión a Internet"
+        Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-        Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+        Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
     }
 }
 
@@ -7423,10 +7423,10 @@ function InstallDotNetRuntimes {
         }
     }
     catch [System.Net.WebException] {
-        Write-Warning -Message $Localization.NoInternetConnection
-        Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+        Write-Warning -Message "No hay conexión a Internet"
+        Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-        Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+        Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
     }
 }
 
@@ -7528,7 +7528,7 @@ function WSA {
             # Check if Windows 11 is installed on an SSD
             $DiskNumber = (Get-Disk | Where-Object -FilterScript { $_.Isboot -and $_.IsSystem -and ($_.OperationalStatus -eq "Online") }).Number
             if (Get-PhysicalDisk -DeviceNumber $DiskNumber | Where-Object -FilterScript { $_.MediaType -ne "SSD" }) {
-                Write-Warning -Message $Localization.SSDRequired
+                Write-Warning -Message "Para utilizar Windows Subsystem for Android™ en su dispositivo, su PC debe tener instalada una unidad de estado sólido (SSD)"
 
                 return
             }
@@ -7537,8 +7537,8 @@ function WSA {
             if ((Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux).State -eq "Disabled") {
                 Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 
-                Write-Warning -Message $Localization.RestartWarning
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Warning -Message "Asegúrese de reiniciar su PC"
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
 
                 return
             }
@@ -7547,8 +7547,8 @@ function WSA {
             if ((Get-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform).State -eq "Disabled") {
                 Enable-WindowsOptionalFeature -Online -FeatureName VirtualMachinePlatform -NoRestart
 
-                Write-Warning -Message $Localization.RestartWarning
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Warning -Message "Asegúrese de reiniciar su PC"
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
 
                 return
             }
@@ -7581,10 +7581,10 @@ function WSA {
                 Start-Process -FilePath ms-windows-store://pdp/?ProductId=9P3395VX91NR
             }
             catch [System.Net.WebException] {
-                Write-Warning -Message $Localization.NoInternetConnection
-                Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+                Write-Warning -Message "No hay conexión a Internet"
+                Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
 
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Disable" {
@@ -7987,10 +7987,10 @@ function UninstallUWPApps {
         Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
     }
 
-    $Window.Title = $Localization.UWPAppsTitle
-    $ButtonUninstall.Content = $Localization.Uninstall
-    $TextBlockRemoveForAll.Text = $Localization.UninstallUWPForAll
-    $TextBlockSelectAll.Text = $Localization.SelectAll
+    $Window.Title = "Aplicaciones UWP"
+    $ButtonUninstall.Content = "Desinstalar"
+    $TextBlockRemoveForAll.Text = "Desinstalar"
+    $TextBlockSelectAll.Text = "Seleccionar todo"
 
     $ButtonUninstall.Add_Click({ ButtonUninstallClick })
     $CheckBoxForAllUsers.Add_Click({ CheckBoxForAllUsersClick })
@@ -8172,11 +8172,11 @@ function UninstallUWPApps {
 
     if ($AppxPackages.Count -eq 0) {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.NoData -Verbose
+        Write-Verbose -Message "Nada que mostrar" -Verbose
     }
     else {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+        Write-Verbose -Message "Abriendo el cuadro de diálogo..." -Verbose
 
         #region Sendkey function
         # Emulate the Backspace key sending to prevent the console window to freeze
@@ -8319,9 +8319,9 @@ function RestoreUWPApps {
         Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
     }
 
-    $Window.Title = $Localization.UWPAppsTitle
-    $ButtonRestore.Content = $Localization.Restore
-    $TextBlockSelectAll.Text = $Localization.SelectAll
+    $Window.Title = "Aplicaciones UWP"
+    $ButtonRestore.Content = "Restaurar"
+    $TextBlockSelectAll.Text = "Seleccionar todo"
 
     $ButtonRestore.Add_Click({ ButtonRestoreClick })
     $CheckBoxSelectAll.Add_Click({ CheckBoxSelectAllClick })
@@ -8478,11 +8478,11 @@ function RestoreUWPApps {
 
     if ($AppxPackages.Count -eq 0) {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.NoData -Verbose
+        Write-Verbose -Message "Nada que mostrar" -Verbose
     }
     else {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+        Write-Verbose -Message "Abriendo el cuadro de diálogo..." -Verbose
 
         #region Sendkey function
         # Emulate the Backspace key sending to prevent the console window to freeze
@@ -8598,9 +8598,9 @@ function HEIF {
         }
     }
     catch [System.Net.WebException] {
-        Write-Warning -Message $Localization.NoInternetConnection
-        Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
-        Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+        Write-Warning -Message "No hay conexión a Internet"
+        Write-Error -Message "No hay conexión a Internet" -ErrorAction SilentlyContinue
+        Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
 
         return
     }
@@ -8643,7 +8643,7 @@ function HEIF {
                     # Installing "HEVC Video Extensions from Device Manufacturer"
                     if ([System.Version]$HEVCPackageName -gt [System.Version](Get-AppxPackage -Name Microsoft.HEVCVideoExtension).Version) {
                         Write-Verbose -Message "Por favor espere..." -Verbose
-                        Write-Verbose -Message $Localization.HEVCDownloading -Verbose
+                        Write-Verbose -Message "Descargando HEVC Vídeo Extensiones del Fabricante del dispositivo... ~2,8 MB" -Verbose
 
                         $DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
                         $Parameters = @{
@@ -8660,10 +8660,10 @@ function HEIF {
                 }
             }
             catch [System.Net.WebException] {
-                Write-Warning -Message ($Localization.NoResponse -f "https://store.rg-adguard.net/api/GetFiles")
-                Write-Error -Message ($Localization.NoResponse -f "https://store.rg-adguard.net/api/GetFiles") -ErrorAction SilentlyContinue
+                Write-Warning -Message ("No se pudo establecer una conexión con {0}" -f "https://store.rg-adguard.net/api/GetFiles")
+                Write-Error -Message ("No se pudo establecer una conexión con {0}" -f "https://store.rg-adguard.net/api/GetFiles") -ErrorAction SilentlyContinue
 
-                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+                Write-Error -Message ("Por favor, reinicie la función {0}" -f $MyInvocation.Line) -ErrorAction SilentlyContinue
             }
         }
         "Manually" {
@@ -8911,10 +8911,10 @@ function XboxGameTips {
 #>
 function SetAppGraphicsPerformance {
     if (Get-CimInstance -ClassName Win32_VideoController | Where-Object -FilterScript { ($_.AdapterDACType -ne "Internal") -and ($null -ne $_.AdapterDACType) }) {
-        $Title = $Localization.GraphicsPerformanceTitle
-        $Message = $Localization.GraphicsPerformanceRequest
-        $Yes = $Localization.Yes
-        $No = $Localization.No
+        $Title = "Preferencia de rendimiento gráfico"
+        $Message = "¿Le gustaría establecer la configuración de rendimiento gráfico de una aplicación de su elección a alto rendimiento?"
+        $Yes = "Sí"
+        $No = "No"
         $Options = "&$Yes", "&$No"
         $DefaultChoice = 1
 
@@ -8924,7 +8924,7 @@ function SetAppGraphicsPerformance {
                 "0" {
                     Add-Type -AssemblyName System.Windows.Forms
                     $OpenFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
-                    $OpenFileDialog.Filter = $Localization.EXEFilesFilter
+                    $OpenFileDialog.Filter = "*.exe|*.exe|Todos los Archivos (*.*)|*.*"
                     $OpenFileDialog.InitialDirectory = "::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"
                     $OpenFileDialog.Multiselect = $false
 
@@ -8942,7 +8942,7 @@ function SetAppGraphicsPerformance {
                 }
                 "1" {
                     Write-Information -MessageData "" -InformationAction Continue
-                    Write-Verbose -Message $Localization.Skipped -Verbose
+                    Write-Verbose -Message "Omitido" -Verbose
                 }
             }
         }
