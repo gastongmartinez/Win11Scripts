@@ -109,3 +109,7 @@ DefaultTerminalApp -WindowsTerminal
 UnpinAllStartApps
 RunPowerShellShortcut -Elevated
 
+# UWP
+UninstallUWPApps
+CortanaAutostart -Disable
+TeamsAutostart -Disable

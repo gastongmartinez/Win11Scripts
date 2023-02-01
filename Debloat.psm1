@@ -7709,3 +7709,1010 @@ function StartLayout {
     }
 }
 #endregion Start menu
+
+#region Universal Apps
+<#
+	.SYNOPSIS
+	Uninstall UWP apps
+
+	.PARAMETER ForAllUsers
+	The "ForAllUsers" argument sets a checkbox to unistall packages for all users
+
+	.EXAMPLE
+	UninstallUWPApps
+
+	.EXAMPLE
+	UninstallUWPApps -ForAllUsers
+
+	.NOTES
+	Current user
+#>
+function UninstallUWPApps {
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $ForAllUsers
+    )
+
+    Add-Type -AssemblyName PresentationCore, PresentationFramework
+
+    #region Variables
+    # The following UWP apps will have their checkboxes unchecked
+    $UncheckedAppxPackages = @(
+        # AMD Radeon Software
+        "AdvancedMicroDevicesInc-2.AMDRadeonSoftware",
+
+        # Intel Graphics Control Center
+        "AppUp.IntelGraphicsControlPanel",
+        "AppUp.IntelGraphicsExperience",
+
+        # Sticky Notes
+        "Microsoft.MicrosoftStickyNotes",
+
+        # Screen Sketch
+        "Microsoft.ScreenSketch",
+
+        # Photos (and Video Editor)
+        "Microsoft.Windows.Photos",
+        "Microsoft.Photos.MediaEngineDLC",
+
+        # Calculator
+        "Microsoft.WindowsCalculator",
+
+        # Windows Camera
+        "Microsoft.WindowsCamera",
+
+        # Xbox Identity Provider
+        "Microsoft.XboxIdentityProvider",
+
+        # Xbox Console Companion
+        "Microsoft.XboxApp",
+
+        # Xbox
+        "Microsoft.GamingApp",
+        "Microsoft.GamingServices",
+
+        # Paint
+        "Microsoft.Paint",
+
+        # Xbox TCUI
+        "Microsoft.Xbox.TCUI",
+
+        # Xbox Speech To Text Overlay
+        "Microsoft.XboxSpeechToTextOverlay",
+
+        # Xbox Game Bar
+        "Microsoft.XboxGamingOverlay",
+
+        # Xbox Game Bar Plugin
+        "Microsoft.XboxGameOverlay",
+
+        # NVIDIA Control Panel
+        "NVIDIACorp.NVIDIAControlPanel",
+
+        # Realtek Audio Console
+        "RealtekSemiconductorCorp.RealtekAudioControl"
+    )
+
+    # The following UWP apps will be excluded from the display
+    $ExcludedAppxPackages = @(
+        # Microsoft Desktop App Installer
+        "Microsoft.DesktopAppInstaller",
+
+        # Store Experience Host
+        "Microsoft.StorePurchaseApp",
+
+        # Notepad
+        "Microsoft.WindowsNotepad",
+
+        # Microsoft Store
+        "Microsoft.WindowsStore",
+
+        # Windows Terminal
+        "Microsoft.WindowsTerminal",
+        "Microsoft.WindowsTerminalPreview",
+
+        # Web Media Extensions
+        "Microsoft.WebMediaExtensions",
+
+        # AV1 Video Extension
+        "Microsoft.AV1VideoExtension",
+
+        # HEVC Video Extensions from Device Manufacturer
+        "Microsoft.HEVCVideoExtension",
+
+        # Raw Image Extension
+        "Microsoft.RawImageExtension",
+
+        # HEIF Image Extensions
+        "Microsoft.HEIFImageExtension",
+
+        # MPEG-2 Video Extension
+        "Microsoft.MPEG2VideoExtension"
+    )
+
+    #region Variables
+    #region XAML Markup
+    # The section defines the design of the upcoming dialog box
+    [xml]$XAML = '
+	<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Name="Window"
+		MinHeight="400" MinWidth="415"
+		SizeToContent="Width" WindowStartupLocation="CenterScreen"
+		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
+		FontFamily="Candara" FontSize="16" ShowInTaskbar="True"
+		Background="#F1F1F1" Foreground="#262626">
+		<Window.Resources>
+			<Style TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal"/>
+				<Setter Property="VerticalAlignment" Value="Top"/>
+			</Style>
+			<Style TargetType="CheckBox">
+				<Setter Property="Margin" Value="10, 13, 10, 10"/>
+				<Setter Property="IsChecked" Value="True"/>
+			</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="Margin" Value="0, 10, 10, 10"/>
+			</Style>
+			<Style TargetType="Button">
+				<Setter Property="Margin" Value="20"/>
+				<Setter Property="Padding" Value="10"/>
+				<Setter Property="IsEnabled" Value="False"/>
+			</Style>
+			<Style TargetType="Border">
+				<Setter Property="Grid.Row" Value="1"/>
+				<Setter Property="CornerRadius" Value="0"/>
+				<Setter Property="BorderThickness" Value="0, 1, 0, 1"/>
+				<Setter Property="BorderBrush" Value="#000000"/>
+			</Style>
+			<Style TargetType="ScrollViewer">
+				<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+				<Setter Property="BorderBrush" Value="#000000"/>
+				<Setter Property="BorderThickness" Value="0, 1, 0, 1"/>
+			</Style>
+		</Window.Resources>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Name="PanelSelectAll" Grid.Column="0" HorizontalAlignment="Left">
+					<CheckBox Name="CheckBoxSelectAll" IsChecked="False"/>
+					<TextBlock Name="TextBlockSelectAll" Margin="10,10, 0, 10"/>
+				</StackPanel>
+				<StackPanel Name="PanelRemoveForAll" Grid.Column="1" HorizontalAlignment="Right">
+					<TextBlock Name="TextBlockRemoveForAll" Margin="10,10, 0, 10"/>
+					<CheckBox Name="CheckBoxForAllUsers" IsChecked="False"/>
+				</StackPanel>
+			</Grid>
+			<Border>
+				<ScrollViewer>
+					<StackPanel Name="PanelContainer" Orientation="Vertical"/>
+				</ScrollViewer>
+			</Border>
+			<Button Name="ButtonUninstall" Grid.Row="2"/>
+		</Grid>
+	</Window>
+	'
+    #endregion XAML Markup
+
+    $Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
+    $Form = [Windows.Markup.XamlReader]::Load($Reader)
+    $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
+        Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
+    }
+
+    $Window.Title = $Localization.UWPAppsTitle
+    $ButtonUninstall.Content = $Localization.Uninstall
+    $TextBlockRemoveForAll.Text = $Localization.UninstallUWPForAll
+    $TextBlockSelectAll.Text = $Localization.SelectAll
+
+    $ButtonUninstall.Add_Click({ ButtonUninstallClick })
+    $CheckBoxForAllUsers.Add_Click({ CheckBoxForAllUsersClick })
+    $CheckBoxSelectAll.Add_Click({ CheckBoxSelectAllClick })
+    #endregion Variables
+
+    #region Functions
+    function Get-AppxBundle {
+        [CmdletBinding()]
+        param
+        (
+            [string[]]
+            $Exclude,
+
+            [switch]
+            $AllUsers
+        )
+
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.Patient -Verbose
+
+        $AppxPackages = @(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers:$AllUsers | Where-Object -FilterScript { $_.Name -notin $ExcludedAppxPackages })
+
+        # The Bundle packages contains no Microsoft Teams
+        if (Get-AppxPackage -Name MicrosoftTeams -AllUsers:$AllUsers) {
+            # Temporarily hack: due to the fact that there are actually two Microsoft Teams packages, we need to choose the first one to display
+            $AppxPackages += Get-AppxPackage -Name MicrosoftTeams -AllUsers:$AllUsers | Select-Object -Index 0
+        }
+
+        # The Bundle packages contains no Spotify
+        if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic -AllUsers:$AllUsers) {
+            # Temporarily hack: due to the fact that there are actually two Microsoft Teams packages, we need to choose the first one to display
+            $AppxPackages += Get-AppxPackage -Name SpotifyAB.SpotifyMusic -AllUsers:$AllUsers | Select-Object -Index 0
+        }
+
+        $PackagesIds = [Windows.Management.Deployment.PackageManager, Windows.Web, ContentType = WindowsRuntime]::new().FindPackages() | Select-Object -Property DisplayName -ExpandProperty Id | Select-Object -Property Name, DisplayName
+
+        foreach ($AppxPackage in $AppxPackages) {
+            $PackageId = $PackagesIds | Where-Object -FilterScript { $_.Name -eq $AppxPackage.Name }
+
+            if (-not $PackageId) {
+                continue
+            }
+
+            [PSCustomObject]@{
+                Name            = $AppxPackage.Name
+                PackageFullName = $AppxPackage.PackageFullName
+                DisplayName     = $PackageId.DisplayName
+            }
+        }
+    }
+
+    function Add-Control {
+        [CmdletBinding()]
+        param
+        (
+            [Parameter(
+                Mandatory = $true,
+                ValueFromPipeline = $true
+            )]
+            [ValidateNotNull()]
+            [PSCustomObject[]]
+            $Packages
+        )
+
+        process {
+            foreach ($Package in $Packages) {
+                $CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
+                $CheckBox.Tag = $Package.PackageFullName
+
+                $TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
+
+                if ($Package.DisplayName) {
+                    $TextBlock.Text = $Package.DisplayName
+                }
+                else {
+                    $TextBlock.Text = $Package.Name
+                }
+
+                $StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
+                $StackPanel.Children.Add($CheckBox) | Out-Null
+                $StackPanel.Children.Add($TextBlock) | Out-Null
+
+                $PanelContainer.Children.Add($StackPanel) | Out-Null
+
+                if ($UncheckedAppxPackages.Contains($Package.Name)) {
+                    $CheckBox.IsChecked = $false
+                }
+                else {
+                    $CheckBox.IsChecked = $true
+                    $PackagesToRemove.Add($Package.PackageFullName)
+                }
+
+                $CheckBox.Add_Click({ CheckBoxClick })
+            }
+        }
+    }
+
+    function CheckBoxForAllUsersClick {
+        $PanelContainer.Children.RemoveRange(0, $PanelContainer.Children.Count)
+        $PackagesToRemove.Clear()
+        $AppXPackages = Get-AppxBundle -Exclude $ExcludedAppxPackages -AllUsers:$CheckBoxForAllUsers.IsChecked
+        $AppXPackages | Add-Control
+
+        ButtonUninstallSetIsEnabled
+    }
+
+    function ButtonUninstallClick {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.Patient -Verbose
+
+        $Window.Close() | Out-Null
+
+        # If Xbox Game Bar is selected to uninstall stop its' processes
+        if ($PackagesToRemove -match "Microsoft.XboxGamingOverlay") {
+            Get-Process -Name GameBar, GameBarFTServer -ErrorAction Ignore | Stop-Process -Force
+        }
+
+        $PackagesToRemove | Remove-AppxPackage -AllUsers:$CheckBoxForAllUsers.IsChecked -Verbose
+    }
+
+    function CheckBoxClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRemove.Add($CheckBox.Tag) | Out-Null
+        }
+        else {
+            $PackagesToRemove.Remove($CheckBox.Tag)
+        }
+
+        ButtonUninstallSetIsEnabled
+    }
+
+    function CheckBoxSelectAllClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRemove.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $true
+                    $PackagesToRemove.Add($Item.Tag)
+                }
+            }
+        }
+        else {
+            $PackagesToRemove.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $false
+                }
+            }
+        }
+
+        ButtonUninstallSetIsEnabled
+    }
+
+    function ButtonUninstallSetIsEnabled {
+        if ($PackagesToRemove.Count -gt 0) {
+            $ButtonUninstall.IsEnabled = $true
+        }
+        else {
+            $ButtonUninstall.IsEnabled = $false
+        }
+    }
+    #endregion Functions
+
+    # Check "For all users" checkbox to uninstall packages from all accounts
+    if ($ForAllUsers) {
+        $CheckBoxForAllUsers.IsChecked = $true
+    }
+
+    $PackagesToRemove = [Collections.Generic.List[string]]::new()
+    $AppXPackages = Get-AppxBundle -Exclude $ExcludedAppxPackages -AllUsers:$ForAllUsers
+    $AppXPackages | Add-Control
+
+    if ($AppxPackages.Count -eq 0) {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.NoData -Verbose
+    }
+    else {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+
+        #region Sendkey function
+        # Emulate the Backspace key sending to prevent the console window to freeze
+        Start-Sleep -Milliseconds 500
+
+        Add-Type -AssemblyName System.Windows.Forms
+
+        $SetForegroundWindow = @{
+            Namespace        = "WinAPI"
+            Name             = "ForegroundWindow"
+            Language         = "CSharp"
+            MemberDefinition = @"
+[DllImport("user32.dll")]
+public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+[DllImport("user32.dll")]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetForegroundWindow(IntPtr hWnd);
+"@
+        }
+
+        if (-not ("WinAPI.ForegroundWindow" -as [type])) {
+            Add-Type @SetForegroundWindow
+        }
+
+        Get-Process | Where-Object -FilterScript { (($_.ProcessName -eq "powershell") -or ($_.ProcessName -eq "WindowsTerminal")) -and ($_.MainWindowTitle -match "Sophia Script for Windows 11") } | ForEach-Object -Process {
+            # Show window, if minimized
+            [WinAPI.ForegroundWindow]::ShowWindowAsync($_.MainWindowHandle, 10)
+
+            Start-Sleep -Seconds 1
+
+            # Force move the console window to the foreground
+            [WinAPI.ForegroundWindow]::SetForegroundWindow($_.MainWindowHandle)
+
+            Start-Sleep -Seconds 1
+
+            # Emulate the Backspace key sending to prevent the console window to freeze
+            [System.Windows.Forms.SendKeys]::SendWait("{BACKSPACE 1}")
+        }
+        #endregion Sendkey function
+
+        if ($PackagesToRemove.Count -gt 0) {
+            $ButtonUninstall.IsEnabled = $true
+        }
+
+        # Force move the WPF form to the foreground
+        $Window.Add_Loaded({ $Window.Activate() })
+        $Form.ShowDialog() | Out-Null
+    }
+}
+
+<#
+	.SYNOPSIS
+	Restore the default UWP apps
+
+	.EXAMPLE
+	RestoreUWPAppsUWPApps
+
+	.NOTES
+	UWP apps can be restored only if they were uninstalled for the current user
+
+	.NOTES
+	Current user
+#>
+function RestoreUWPApps {
+    Add-Type -AssemblyName PresentationCore, PresentationFramework
+
+    #region Variables
+    #region XAML Markup
+    # The section defines the design of the upcoming dialog box
+    [xml]$XAML = '
+	<Window
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		Name="Window"
+		MinHeight="400" MinWidth="410"
+		SizeToContent="Width" WindowStartupLocation="CenterScreen"
+		TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True"
+		FontFamily="Candara" FontSize="16" ShowInTaskbar="True"
+		Background="#F1F1F1" Foreground="#262626">
+		<Window.Resources>
+			<Style TargetType="StackPanel">
+				<Setter Property="Orientation" Value="Horizontal"/>
+				<Setter Property="VerticalAlignment" Value="Top"/>
+			</Style>
+			<Style TargetType="CheckBox">
+				<Setter Property="Margin" Value="10, 13, 10, 10"/>
+				<Setter Property="IsChecked" Value="True"/>
+			</Style>
+			<Style TargetType="TextBlock">
+				<Setter Property="Margin" Value="0, 10, 10, 10"/>
+			</Style>
+			<Style TargetType="Button">
+				<Setter Property="Margin" Value="20"/>
+				<Setter Property="Padding" Value="10"/>
+				<Setter Property="IsEnabled" Value="False"/>
+			</Style>
+			<Style TargetType="Border">
+				<Setter Property="Grid.Row" Value="1"/>
+				<Setter Property="CornerRadius" Value="0"/>
+				<Setter Property="BorderThickness" Value="0, 1, 0, 1"/>
+				<Setter Property="BorderBrush" Value="#000000"/>
+			</Style>
+			<Style TargetType="ScrollViewer">
+				<Setter Property="HorizontalScrollBarVisibility" Value="Disabled"/>
+				<Setter Property="BorderBrush" Value="#000000"/>
+				<Setter Property="BorderThickness" Value="0, 1, 0, 1"/>
+			</Style>
+		</Window.Resources>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto"/>
+			</Grid.RowDefinitions>
+			<Grid Grid.Row="0">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Name="PanelSelectAll" Grid.Column="0" HorizontalAlignment="Left">
+					<CheckBox Name="CheckBoxSelectAll" IsChecked="False"/>
+					<TextBlock Name="TextBlockSelectAll" Margin="10,10, 0, 10"/>
+				</StackPanel>
+			</Grid>
+			<Border>
+				<ScrollViewer>
+					<StackPanel Name="PanelContainer" Orientation="Vertical"/>
+				</ScrollViewer>
+			</Border>
+			<Button Name="ButtonRestore" Grid.Row="2"/>
+		</Grid>
+	</Window>
+	'
+    #endregion XAML Markup
+
+    $Reader = (New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $XAML)
+    $Form = [Windows.Markup.XamlReader]::Load($Reader)
+    $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
+        Set-Variable -Name ($_.Name) -Value $Form.FindName($_.Name)
+    }
+
+    $Window.Title = $Localization.UWPAppsTitle
+    $ButtonRestore.Content = $Localization.Restore
+    $TextBlockSelectAll.Text = $Localization.SelectAll
+
+    $ButtonRestore.Add_Click({ ButtonRestoreClick })
+    $CheckBoxSelectAll.Add_Click({ CheckBoxSelectAllClick })
+    #endregion Variables
+
+    #region Functions
+    function Get-AppxManifest {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.Patient -Verbose
+
+        # You cannot retrieve packages using -PackageTypeFilter Bundle, otherwise you won't get the InstallLocation attribute. It can be retrieved only by comparing with $Bundles
+        $Bundles = (Get-AppXPackage -PackageTypeFilter Bundle -AllUsers).Name
+        $AppxPackages = @(Get-AppxPackage -AllUsers | Where-Object -FilterScript { $_.PackageUserInformation -match "Staged" } | Where-Object -FilterScript { $_.Name -in $Bundles })
+
+        # The Bundle packages contains no Microsoft Teams
+        if (Get-AppxPackage -Name MicrosoftTeams -AllUsers) {
+            # Temporarily hack: due to the fact that there are actually two Microsoft Teams packages, we need to choose the first one to display
+            $AppxPackages += Get-AppxPackage -Name MicrosoftTeams -AllUsers | Where-Object -FilterScript { $_.PackageUserInformation -match "Staged" } | Select-Object -Index 0
+        }
+
+        # The Bundle packages contains no Microsoft Teams
+        if (Get-AppxPackage -Name SpotifyAB.SpotifyMusic -AllUsers) {
+            # Temporarily hack: due to the fact that there are actually two Spotify packages, we need to choose the first one to display
+            $AppxPackages += Get-AppxPackage -Name SpotifyAB.SpotifyMusic -AllUsers | Where-Object -FilterScript { $_.PackageUserInformation -match "Staged" } | Select-Object -Index 0
+        }
+
+        $PackagesIds = [Windows.Management.Deployment.PackageManager, Windows.Web, ContentType = WindowsRuntime]::new().FindPackages() | Select-Object -Property DisplayName -ExpandProperty Id | Select-Object -Property Name, DisplayName
+
+        foreach ($AppxPackage in $AppxPackages) {
+            $PackageId = $PackagesIds | Where-Object -FilterScript { $_.Name -eq $AppxPackage.Name }
+
+            if (-not $PackageId) {
+                continue
+            }
+
+            [PSCustomObject]@{
+                Name            = $AppxPackage.Name
+                PackageFullName = $AppxPackage.PackageFullName
+                DisplayName     = $PackageId.DisplayName
+                AppxManifest    = "$($AppxPackage.InstallLocation)\AppxManifest.xml"
+            }
+        }
+    }
+
+    function Add-Control {
+        [CmdletBinding()]
+        param
+        (
+            [Parameter(
+                Mandatory = $true,
+                ValueFromPipeline = $true
+            )]
+            [ValidateNotNull()]
+            [PSCustomObject[]]
+            $Packages
+        )
+
+        process {
+            foreach ($Package in $Packages) {
+                $CheckBox = New-Object -TypeName System.Windows.Controls.CheckBox
+                $CheckBox.Tag = $Package.AppxManifest
+
+                $TextBlock = New-Object -TypeName System.Windows.Controls.TextBlock
+
+                if ($Package.DisplayName) {
+                    $TextBlock.Text = $Package.DisplayName
+                }
+                else {
+                    $TextBlock.Text = $Package.Name
+                }
+
+                $StackPanel = New-Object -TypeName System.Windows.Controls.StackPanel
+                $StackPanel.Children.Add($CheckBox) | Out-Null
+                $StackPanel.Children.Add($TextBlock) | Out-Null
+
+                $PanelContainer.Children.Add($StackPanel) | Out-Null
+
+                $CheckBox.IsChecked = $true
+                $PackagesToRestore.Add($Package.AppxManifest)
+
+                $CheckBox.Add_Click({ CheckBoxClick })
+            }
+        }
+    }
+
+    function ButtonRestoreClick {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.Patient -Verbose
+
+        $Window.Close() | Out-Null
+
+        $Parameters = @{
+            Register                  = $true
+            ForceApplicationShutdown  = $true
+            ForceUpdateFromAnyVersion = $true
+            DisableDevelopmentMode    = $true
+            Verbose                   = $true
+        }
+        $PackagesToRestore | Add-AppxPackage @Parameters
+    }
+
+    function CheckBoxClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRestore.Add($CheckBox.Tag) | Out-Null
+        }
+        else {
+            $PackagesToRestore.Remove($CheckBox.Tag)
+        }
+
+        ButtonRestoreSetIsEnabled
+    }
+
+    function CheckBoxSelectAllClick {
+        $CheckBox = $_.Source
+
+        if ($CheckBox.IsChecked) {
+            $PackagesToRestore.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $true
+                    $PackagesToRestore.Add($Item.Tag)
+                }
+            }
+        }
+        else {
+            $PackagesToRestore.Clear()
+
+            foreach ($Item in $PanelContainer.Children.Children) {
+                if ($Item -is [System.Windows.Controls.CheckBox]) {
+                    $Item.IsChecked = $false
+                }
+            }
+        }
+
+        ButtonRestoreSetIsEnabled
+    }
+
+    function ButtonRestoreSetIsEnabled {
+        if ($PackagesToRestore.Count -gt 0) {
+            $ButtonRestore.IsEnabled = $true
+        }
+        else {
+            $ButtonRestore.IsEnabled = $false
+        }
+    }
+    #endregion Functions
+
+    $PackagesToRestore = [Collections.Generic.List[string]]::new()
+    $AppXPackages = Get-AppxManifest
+    $AppXPackages | Add-Control
+
+    if ($AppxPackages.Count -eq 0) {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.NoData -Verbose
+    }
+    else {
+        Write-Information -MessageData "" -InformationAction Continue
+        Write-Verbose -Message $Localization.DialogBoxOpening -Verbose
+
+        #region Sendkey function
+        # Emulate the Backspace key sending to prevent the console window to freeze
+        Start-Sleep -Milliseconds 500
+
+        Add-Type -AssemblyName System.Windows.Forms
+
+        $SetForegroundWindow = @{
+            Namespace        = "WinAPI"
+            Name             = "ForegroundWindow"
+            Language         = "CSharp"
+            MemberDefinition = @"
+[DllImport("user32.dll")]
+public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);
+
+[DllImport("user32.dll")]
+[return: MarshalAs(UnmanagedType.Bool)]
+public static extern bool SetForegroundWindow(IntPtr hWnd);
+"@
+        }
+
+        if (-not ("WinAPI.ForegroundWindow" -as [type])) {
+            Add-Type @SetForegroundWindow
+        }
+
+        Get-Process | Where-Object -FilterScript { (($_.ProcessName -eq "powershell") -or ($_.ProcessName -eq "WindowsTerminal")) -and ($_.MainWindowTitle -match "Sophia Script for Windows 11") } | ForEach-Object -Process {
+            # Show window, if minimized
+            [WinAPI.ForegroundWindow]::ShowWindowAsync($_.MainWindowHandle, 10)
+
+            Start-Sleep -Seconds 1
+
+            # Force move the console window to the foreground
+            [WinAPI.ForegroundWindow]::SetForegroundWindow($_.MainWindowHandle)
+
+            Start-Sleep -Seconds 1
+
+            # Emulate the Backspace key sending to prevent the console window to freeze
+            [System.Windows.Forms.SendKeys]::SendWait("{BACKSPACE 1}")
+        }
+        #endregion Sendkey function
+
+        if ($PackagesToRestore.Count -gt 0) {
+            $ButtonRestore.IsEnabled = $true
+        }
+
+        # Force move the WPF form to the foreground
+        $Window.Add_Loaded({ $Window.Activate() })
+        $Form.ShowDialog() | Out-Null
+    }
+}
+
+<#
+	.SYNOPSIS
+	"HEVC Video Extensions from Device Manufacturer" extension
+
+	.PARAMETER Install
+	Download and install the "HEVC Video Extensions from Device Manufacturer" extension
+
+	.PARAMETER Manually
+	Open Microsoft Store "HEVC Video Extensions from Device Manufacturer" page to install the extension manually
+
+	.EXAMPLE
+	HEIF -Install
+
+	.EXAMPLE
+	HEIF -Manually
+
+	.LINK
+	https://www.microsoft.com/store/productId/9n4wgh0z6vhq
+
+	.NOTES
+	The extension can be installed without Microsoft account
+
+	.NOTES
+	HEVC Video Extension is already installed in Windows 11 22H2 by default
+
+	.NOTES
+	Current user
+#>
+function HEIF {
+    param
+    (
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Install"
+        )]
+        [switch]
+        $Install,
+
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Manually"
+        )]
+        [switch]
+        $Manually
+    )
+
+    # Check whether the extension is already installed
+    if (-not (Get-AppxPackage -Name Microsoft.Windows.Photos)) {
+        return
+    }
+
+    try {
+        # Check the internet connection
+        $Parameters = @{
+            Uri              = "https://www.google.com"
+            Method           = "Head"
+            DisableKeepAlive = $true
+            UseBasicParsing  = $true
+        }
+        if (-not (Invoke-WebRequest @Parameters).StatusDescription) {
+            return
+        }
+    }
+    catch [System.Net.WebException] {
+        Write-Warning -Message $Localization.NoInternetConnection
+        Write-Error -Message $Localization.NoInternetConnection -ErrorAction SilentlyContinue
+        Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+
+        return
+    }
+
+    switch ($PSCmdlet.ParameterSetName) {
+        "Install" {
+            try {
+                # Check whether https://store.rg-adguard.net is alive
+                $Parameters = @{
+                    Uri              = "https://store.rg-adguard.net/api/GetFiles"
+                    Method           = "Head"
+                    DisableKeepAlive = $true
+                    UseBasicParsing  = $true
+                }
+                if (-not (Invoke-WebRequest @Parameters).StatusDescription) {
+                    return
+                }
+
+                $Body = @{
+                    type = "url"
+                    url  = "https://www.microsoft.com/store/productId/9n4wgh0z6vhq"
+                    ring = "Retail"
+                    lang = "en-US"
+                }
+                $Parameters = @{
+                    Uri             = "https://store.rg-adguard.net/api/GetFiles"
+                    Method          = "Post"
+                    ContentType     = "application/x-www-form-urlencoded"
+                    Body            = $Body
+                    UseBasicParsing = $true
+                    Verbose         = $true
+                }
+                $Raw = Invoke-WebRequest @Parameters
+
+                # Parsing the page
+                $Raw | Select-String -Pattern '<tr style.*<a href=\"(?<url>.*)"\s.*>(?<text>.*)<\/a>' -AllMatches | ForEach-Object -Process { $_.Matches } | Where-Object -FilterScript { $_.Value -like "*x64*.appx*" } | ForEach-Object -Process {
+                    $TempURL = ($_.Groups | Select-Object -Index 1).Value
+                    $HEVCPackageName = ($_.Groups | Select-Object -Index 2).Value.Split("_") | Select-Object -Index 1
+
+                    # Installing "HEVC Video Extensions from Device Manufacturer"
+                    if ([System.Version]$HEVCPackageName -gt [System.Version](Get-AppxPackage -Name Microsoft.HEVCVideoExtension).Version) {
+                        Write-Verbose -Message $Localization.Patient -Verbose
+                        Write-Verbose -Message $Localization.HEVCDownloading -Verbose
+
+                        $DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
+                        $Parameters = @{
+                            Uri             = $TempURL
+                            OutFile         = "$DownloadsFolder\Microsoft.HEVCVideoExtension_8wekyb3d8bbwe.appx"
+                            UseBasicParsing = $true
+                            Verbose         = $true
+                        }
+                        Invoke-WebRequest @Parameters
+
+                        Add-AppxPackage -Path "$DownloadsFolder\Microsoft.HEVCVideoExtension_8wekyb3d8bbwe.appx" -Verbose
+                        Remove-Item -Path "$DownloadsFolder\Microsoft.HEVCVideoExtension_8wekyb3d8bbwe.appx" -Force
+                    }
+                }
+            }
+            catch [System.Net.WebException] {
+                Write-Warning -Message ($Localization.NoResponse -f "https://store.rg-adguard.net/api/GetFiles")
+                Write-Error -Message ($Localization.NoResponse -f "https://store.rg-adguard.net/api/GetFiles") -ErrorAction SilentlyContinue
+
+                Write-Error -Message ($Localization.RestartFunction -f $MyInvocation.Line) -ErrorAction SilentlyContinue
+            }
+        }
+        "Manually" {
+            Start-Process -FilePath ms-windows-store://pdp/?ProductId=9n4wgh0z6vhq
+        }
+    }
+}
+
+<#
+	.SYNOPSIS
+	Cortana autostarting
+
+	.PARAMETER Disable
+	Disable Cortana autostarting
+
+	.PARAMETER Enable
+	Enable Cortana autostarting
+
+	.EXAMPLE
+	CortanaAutostart -Disable
+
+	.EXAMPLE
+	CortanaAutostart -Enable
+
+	.NOTES
+	Current user
+#>
+function CortanaAutostart {
+    param
+    (
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Disable"
+        )]
+        [switch]
+        $Disable,
+
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Enable"
+        )]
+        [switch]
+        $Enable
+    )
+
+    switch ($PSCmdlet.ParameterSetName) {
+        "Disable" {
+            if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
+                if (-not (Test-Path -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId")) {
+                    New-Item -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Force
+                }
+                New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 1 -Force
+            }
+        }
+        "Enable" {
+            if (Get-AppxPackage -Name Microsoft.549981C3F5F10) {
+                if (-not (Test-Path -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId")) {
+                    New-Item -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Force
+                }
+                New-ItemProperty -Path "Registry::HKEY_CLASSES_ROOT\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\Microsoft.549981C3F5F10_8wekyb3d8bbwe\CortanaStartupId" -Name State -PropertyType DWord -Value 2 -Force
+            }
+        }
+    }
+}
+
+<#
+	.SYNOPSIS
+	Microsoft Teams autostarting
+
+	.PARAMETER Disable
+	Enable Teams autostarting
+
+	.PARAMETER Enable
+	Disable Teams autostarting
+
+	.EXAMPLE
+	TeamsAutostart -Disable
+
+	.EXAMPLE
+	TeamsAutostart -Enable
+
+	.NOTES
+	Current user
+#>
+function TeamsAutostart {
+    param
+    (
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Disable"
+        )]
+        [switch]
+        $Disable,
+
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Enable"
+        )]
+        [switch]
+        $Enable
+    )
+
+    if (Get-AppxPackage -Name MicrosoftTeams) {
+        switch ($PSCmdlet.ParameterSetName) {
+            "Disable" {
+                if (-not (Test-Path -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask")) {
+                    New-Item -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask" -Force
+                }
+                New-ItemProperty -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask" -Name State -PropertyType DWord -Value 1 -Force
+            }
+            "Enable" {
+                if (-not (Test-Path -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask")) {
+                    New-Item -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask" -Force
+                }
+                New-ItemProperty -Path "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData\MicrosoftTeams_8wekyb3d8bbwe\TeamsStartupTask" -Name State -PropertyType DWord -Value 2 -Force
+            }
+        }
+    }
+}
+
+# Check for UWP apps updates
+function CheckUWPAppsUpdates {
+    Write-Information -MessageData "" -InformationAction Continue
+    Write-Verbose -Message $Localization.Patient -Verbose
+    Get-CimInstance -Namespace root\cimv2\mdm\dmmap -ClassName MDM_EnterpriseModernAppManagement_AppManagement01 | Invoke-CimMethod -MethodName UpdateScanMethod
+}
+#endregion Universal Apps
