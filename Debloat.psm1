@@ -51,9 +51,9 @@ Function RemoveApps ($Apps) {
 
     Get-Content -Path $Logfile
     
-    winget uninstall "Microsoft OneDrive"
-    winget uninstall "Cortana"
-    winget uninstall "Microsoft 365 (Office)"
+    winget uninstall "Microsoft OneDrive" --silent --accept-package-agreements
+    winget uninstall "Cortana" --silent --accept-package-agreements
+    winget uninstall "Microsoft 365 (Office)" --silent --accept-package-agreements
 }
 #endregion MS Apps
 
