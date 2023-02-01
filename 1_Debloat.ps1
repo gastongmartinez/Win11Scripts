@@ -87,3 +87,21 @@ ShortcutsSuffix -Disable
 PrtScnSnippingTool -Enable
 AeroShaking -Enable
 FolderGroupBy -None
+
+# System
+StorageSense -Disable
+Hibernation -Disable
+Win32LongPathLimit -Disable
+BSoDStopError -Enable
+AdminApprovalMode -Default
+DeliveryOptimization -Disable
+WindowsFeatures -Disable
+WindowsCapabilities -Uninstall
+UpdateMicrosoftProducts -Enable
+PowerPlan -High
+NetworkAdaptersSavePower -Disable
+WinPrtScrFolder -Desktop
+NumLock -Enable
+StickyShift -Disable
+SaveRestartableApps -Enable
+DefaultTerminalApp -WindowsTerminal
