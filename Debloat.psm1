@@ -559,7 +559,7 @@ function ScheduledTasks {
 
     function DisableButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -569,7 +569,7 @@ function ScheduledTasks {
 
     function EnableButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -627,7 +627,7 @@ function ScheduledTasks {
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.Patient -Verbose
+    Write-Verbose -Message "Por favor espere..." -Verbose
 
     # Getting list of all scheduled tasks according to the conditions
     $Tasks = Get-ScheduledTask | Where-Object -FilterScript { ($_.State -eq $State) -and ($_.TaskName -in $CheckedScheduledTasks) }
@@ -4045,7 +4045,7 @@ function WindowsFeatures {
 
     function DisableButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -4055,7 +4055,7 @@ function WindowsFeatures {
 
     function EnableButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -4118,7 +4118,7 @@ function WindowsFeatures {
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.Patient -Verbose
+    Write-Verbose -Message "Por favor espere..." -Verbose
 
     # Getting list of all optional features according to the conditions
     $OFS = "|"
@@ -4382,7 +4382,7 @@ function WindowsCapabilities {
 
     function UninstallButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -4397,7 +4397,7 @@ function WindowsCapabilities {
 
     function InstallButton {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         [void]$Window.Close()
 
@@ -4482,7 +4482,7 @@ function WindowsCapabilities {
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.Patient -Verbose
+    Write-Verbose -Message "Por favor espere..." -Verbose
 
     # Getting list of all capabilities according to the conditions
     $OFS = "|"
@@ -4719,7 +4719,7 @@ function NetworkAdaptersSavePower {
         (
             Get-NetAdapter -Physical -Name $PhysicalAdaptersStatusUp | Where-Object -FilterScript { ($_.Status -eq "Disconnected") -and $_.MacAddress }
         ) {
-            Write-Verbose -Message $Localization.Patient -Verbose
+            Write-Verbose -Message "Por favor espere..." -Verbose
             Start-Sleep -Seconds 2
         }
     }
@@ -7143,7 +7143,7 @@ namespace FileAssoc
     }
 
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.Patient -Verbose
+    Write-Verbose -Message "Por favor espere..." -Verbose
 
     # If the file extension specified configure the extension
     Write-ExtensionKeys -ProgId $ProgId -Extension $Extension
@@ -8010,7 +8010,7 @@ function UninstallUWPApps {
         )
 
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         $AppxPackages = @(Get-AppxPackage -PackageTypeFilter Bundle -AllUsers:$AllUsers | Where-Object -FilterScript { $_.Name -notin $ExcludedAppxPackages })
 
@@ -8100,7 +8100,7 @@ function UninstallUWPApps {
 
     function ButtonUninstallClick {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         $Window.Close() | Out-Null
 
@@ -8330,7 +8330,7 @@ function RestoreUWPApps {
     #region Functions
     function Get-AppxManifest {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         # You cannot retrieve packages using -PackageTypeFilter Bundle, otherwise you won't get the InstallLocation attribute. It can be retrieved only by comparing with $Bundles
         $Bundles = (Get-AppXPackage -PackageTypeFilter Bundle -AllUsers).Name
@@ -8409,7 +8409,7 @@ function RestoreUWPApps {
 
     function ButtonRestoreClick {
         Write-Information -MessageData "" -InformationAction Continue
-        Write-Verbose -Message $Localization.Patient -Verbose
+        Write-Verbose -Message "Por favor espere..." -Verbose
 
         $Window.Close() | Out-Null
 
@@ -8642,7 +8642,7 @@ function HEIF {
 
                     # Installing "HEVC Video Extensions from Device Manufacturer"
                     if ([System.Version]$HEVCPackageName -gt [System.Version](Get-AppxPackage -Name Microsoft.HEVCVideoExtension).Version) {
-                        Write-Verbose -Message $Localization.Patient -Verbose
+                        Write-Verbose -Message "Por favor espere..." -Verbose
                         Write-Verbose -Message $Localization.HEVCDownloading -Verbose
 
                         $DownloadsFolder = Get-ItemPropertyValue -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name "{374DE290-123F-4565-9164-39C4925E467B}"
@@ -8787,7 +8787,7 @@ function TeamsAutostart {
 # Check for UWP apps updates
 function CheckUWPAppsUpdates {
     Write-Information -MessageData "" -InformationAction Continue
-    Write-Verbose -Message $Localization.Patient -Verbose
+    Write-Verbose -Message "Por favor espere..." -Verbose
     Get-CimInstance -Namespace root\cimv2\mdm\dmmap -ClassName MDM_EnterpriseModernAppManagement_AppManagement01 | Invoke-CimMethod -MethodName UpdateScanMethod
 }
 #endregion Universal Apps
