@@ -37,3 +37,24 @@ $MSApss = @(
 )
 
 RemoveApps $MSApss
+
+
+# Privacy & Telemetry
+DiagTrackService -Disable
+DiagnosticDataLevel -Minimal
+ErrorReporting -Disable
+FeedbackFrequency -Never
+ScheduledTasks -Disable
+SigninInfo -Disable
+LanguageListAccess -Disable
+AdvertisingID -Disable
+WindowsWelcomeExperience -Hide
+WindowsTips -Disable
+SettingsSuggestedContent -Hide
+AppsSilentInstalling -Disable
+WhatsNewInWindows -Disable
+TailoredExperiences -Disable
+BingSearch -Disable
+
+
+# UI & Personalization
