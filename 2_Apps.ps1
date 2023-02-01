@@ -34,6 +34,8 @@ $AppsWG = @(
     "WinSCP"
     "Glary Utilities"
     "calibre"
+    "Obsidian.Obsidian"
+    "TheDocumentFoundation.LibreOffice"
     "SumatraPDF"
     "Neovim"
     "balenaEtcher"
@@ -53,6 +55,8 @@ $AppsWG = @(
     "DataGrip"
     "CLion"
     "JetBrains Rider"
+    "Apple.iTunes"
+    "Microsoft.PowerShell"
 )
 
 Write-Output "Instalando Paquetes con Winget"
