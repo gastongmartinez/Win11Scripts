@@ -7528,7 +7528,7 @@ function WSA {
             # Check if Windows 11 is installed on an SSD
             $DiskNumber = (Get-Disk | Where-Object -FilterScript { $_.Isboot -and $_.IsSystem -and ($_.OperationalStatus -eq "Online") }).Number
             if (Get-PhysicalDisk -DeviceNumber $DiskNumber | Where-Object -FilterScript { $_.MediaType -ne "SSD" }) {
-                Write-Warning -Message "Para utilizar Windows Subsystem for Android™ en su dispositivo, su PC debe tener instalada una unidad de estado sólido (SSD)"
+                Write-Warning -Message "Para utilizar Windows Subsystem for Android en su dispositivo, su PC debe tener instalada una unidad de estado sólido (SSD)"
 
                 return
             }
