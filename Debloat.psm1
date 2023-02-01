@@ -1166,6 +1166,37 @@ function ThisPC {
     }
 }
 
+function UserFolder {
+    param
+    (
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Show"
+        )]
+        [switch]
+        $Show,
+
+        [Parameter(
+            Mandatory = $true,
+            ParameterSetName = "Hide"
+        )]
+        [switch]
+        $Hide
+    )
+
+    switch ($PSCmdlet.ParameterSetName) {
+        "Show" {
+            if (-not (Test-Path -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel)) {
+                New-Item -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel -Force
+            }
+            New-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel -Name "{59031a47-3f72-44a7-89c5-5595fe6b30ee}" -PropertyType DWord -Value 0 -Force
+        }
+        "Hide" {
+            Remove-ItemProperty -Path HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel -Name "{59031a47-3f72-44a7-89c5-5595fe6b30ee}" -Force -ErrorAction Ignore
+        }
+    }
+}
+
 <#
 	.SYNOPSIS
 	Item check boxes

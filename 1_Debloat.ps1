@@ -58,3 +58,32 @@ BingSearch -Disable
 
 
 # UI & Personalization
+ThisPC -Show
+UserFolder -Show
+CheckBoxes -Disable
+HiddenItems -Enable
+FileExtensions -Show
+OpenFileExplorerTo -ThisPC
+FileExplorerCompactMode -Disable
+SnapAssist -Disable
+SnapAssistFlyout -Enable
+FileTransferDialog -Detailed
+RecycleBinDeleteConfirmation -Enable
+QuickAccessRecentFiles -Hide
+QuickAccessFrequentFolders -Show
+TaskbarAlignment -Left
+TaskbarSearch -Hide
+TaskViewButton -Hide
+TaskbarWidgets -Hide
+TaskbarChat -Hide
+UnpinTaskbarShortcuts -Shortcuts Edge, Store
+ControlPanelView -SmallIcons
+WindowsColorMode -Dark
+AppColorMode -Dark
+FirstLogonAnimation -Disable
+JPEGWallpapersQuality -Max
+RestartNotification -Show
+ShortcutsSuffix -Disable
+PrtScnSnippingTool -Enable
+AeroShaking -Enable
+FolderGroupBy -None
