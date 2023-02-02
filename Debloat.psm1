@@ -4240,10 +4240,7 @@ function WindowsCapabilities {
         "App.StepsRecorder*",
 
         # Microsoft Quick Assist
-        "App.Support.QuickAssist*",
-
-        # WordPad
-        "Microsoft.Windows.WordPad*"
+        "App.Support.QuickAssist*"
     )
 
     # The following optional features will have their checkboxes unchecked
@@ -4259,7 +4256,10 @@ function WindowsCapabilities {
         "Media.WindowsMediaPlayer*",
 
         # OpenSSH Client
-        "OpenSSH.Client*"
+        "OpenSSH.Client*",
+
+        # WordPad
+        "Microsoft.Windows.WordPad*"
     )
 
     # The following optional features will be excluded from the display
