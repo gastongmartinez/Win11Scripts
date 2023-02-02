@@ -11,6 +11,7 @@ $AppsCT = @(
     "shellcheck"
     "ripgrep"
     "fd"
+    "nerd-fonts-jetbrainsmono"
 )
 
 ForEach ($App in $AppsCT) {
@@ -57,7 +58,15 @@ $AppsWG = @(
     "JetBrains Rider"
     "Apple.iTunes"
     "Microsoft.PowerShell"
+    "JanDeDobbeleer.OhMyPosh"
+    "Microsoft.PowerBI"
+    "Tableau.Public"
+    "Rainmeter"
+    "Microsoft.VisualStudio.2022.Community"
+    "Microsoft.SQLServerManagementStudio"
 )
+
+winget source update
 
 Write-Output "Instalando Paquetes con Winget"
 
