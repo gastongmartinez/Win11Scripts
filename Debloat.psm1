@@ -5785,7 +5785,7 @@ function WinPrtScrFolder {
                 # Get the name of a preset (e.g Sophia.ps1) regardless it was named
                 $PresetName = Split-Path -Path $PresetName.File -Leaf
                 # Check whether a preset contains the "OneDrive -Uninstall" string uncommented out
-                $OneDriveUninstallFunctionUncommented = (Get-Content -Path $PSScriptRoot\..\$PresetName -Encoding UTF8 -Force | Select-String -SimpleMatch "OneDrive -Uninstall").Line.StartsWith("#") -eq $false
+                # $OneDriveUninstallFunctionUncommented = (Get-Content -Path $PSScriptRoot\..\$PresetName -Encoding UTF8 -Force | Select-String -SimpleMatch "OneDrive -Uninstall").Line.StartsWith("#") -eq $false
                 $OneDriveInstalled = Get-Package -Name "Microsoft OneDrive" -ProviderName Programs -Force -ErrorAction Ignore
                 if ($OneDriveUninstallFunctionUncommented -or (-not $OneDriveInstalled)) {
                     $DesktopFolder = Get-ItemPropertyValue -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders" -Name Desktop
