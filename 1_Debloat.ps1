@@ -118,3 +118,6 @@ TeamsAutostart -Disable
 # Gaming
 XboxGameBar -Disable
 XboxGameTips -Disable
+
+
+Restart-Computer
