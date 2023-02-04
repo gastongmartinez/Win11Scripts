@@ -64,6 +64,7 @@ $AppsWG = @(
     "Rainmeter"
     "Microsoft.VisualStudio.2022.Community"
     "Microsoft.SQLServerManagementStudio"
+    "OO-Software.ShutUp10"
 )
 
 winget source update
