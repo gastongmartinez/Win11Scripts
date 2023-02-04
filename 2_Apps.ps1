@@ -65,6 +65,7 @@ $AppsWG = @(
     "Microsoft.VisualStudio.2022.Community"
     "Microsoft.SQLServerManagementStudio"
     "OO-Software.ShutUp10"
+    "Flameshot"
 )
 
 winget source update
@@ -76,6 +77,13 @@ ForEach ($App in $AppsWG) {
     Write-Output "Instalando $App"
     winget install $App --silent --accept-package-agreements
 }
+
+# Limpieza Escritorio
+Get-ChildItem -Path $HOME\Desktop -Include *.lnk -File -Recurse | ForEach-Object { $_.Delete() }
+Get-ChildItem -Path C:\Users\Public\Desktop -Include *.lnk -File -Recurse | ForEach-Object { $_.Delete() }
+
+# Orden iconos escritorio
+Set-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\Shell\Bags\1\Desktop" -Name FFlags -Value "1075839525"
 
 $SN = Read-Host -Prompt "Se recomienda reiniciar el equipo, desea hacerlo ahora? (S/N): "
 if ( $SN -eq "S" ) {
